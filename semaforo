@@ -1,0 +1,65 @@
+// Pinos
+const int verde = 21;
+const int amarelo = 22;
+const int vermelho = 23;
+const int botao = 19;
+const int buzzer = 18;
+
+void setup() {
+  pinMode(verde, OUTPUT);
+  pinMode(amarelo, OUTPUT);
+  pinMode(vermelho, OUTPUT);
+
+  pinMode(botao, INPUT_PULLUP);
+  pinMode(buzzer, OUTPUT);
+
+  // Estado inicial
+  digitalWrite(verde, HIGH);
+  digitalWrite(amarelo, LOW);
+  digitalWrite(vermelho, LOW);
+}
+
+void loop() {
+
+  // Aguarda o botão ser pressionado
+  if (digitalRead(botao) == LOW) {
+
+    // Bip de aviso
+    tone(buzzer, 1000);
+    delay(500);
+    noTone(buzzer);
+
+    // Evita múltiplos acionamentos
+    delay(300);
+
+    // Verde -> Amarelo
+    digitalWrite(verde, LOW);
+    digitalWrite(amarelo, HIGH);
+
+    delay(4000); // 4 segundos
+
+    // Amarelo -> Vermelho
+    digitalWrite(amarelo, LOW);
+
+    // Vermelho piscando por 10 segundos
+    for (int i = 0; i < 20; i++) {
+
+      digitalWrite(vermelho, HIGH);
+      tone(buzzer, 2000);
+      delay(250);
+
+      digitalWrite(vermelho, LOW);
+      noTone(buzzer);
+      delay(250);
+    }
+
+    // Retorna ao verde
+    digitalWrite(vermelho, LOW);
+    digitalWrite(verde, HIGH);
+
+    // Aguarda soltar o botão
+    while (digitalRead(botao) == LOW) {
+      delay(10);
+    }
+  }
+}
